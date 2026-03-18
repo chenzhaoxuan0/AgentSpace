@@ -1,0 +1,18 @@
+# .NET Core build output
+src/**/bin/
+src/**/obj/
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio
+.vs/
+*.suo
+*.userprefs
+
+# Debug symbols and dev config (not needed for end users)
+*.pdb
+*.runtimeconfig.dev.json
+
+# Temp build folders
+release_temp/

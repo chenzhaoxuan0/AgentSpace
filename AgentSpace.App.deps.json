@@ -1,0 +1,36 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v3.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v3.0": {
+      "AgentSpace.App/1.0.0": {
+        "dependencies": {
+          "AgentSpace.Core": "1.0.0"
+        },
+        "runtime": {
+          "AgentSpace.App.dll": {}
+        }
+      },
+      "AgentSpace.Core/1.0.0": {
+        "runtime": {
+          "AgentSpace.Core.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "AgentSpace.App/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "AgentSpace.Core/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

@@ -1,0 +1,81 @@
+<Window x:Class="AgentSpace.App.Views.ContainerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ContainerWindow" 
+        WindowStyle="None" 
+        AllowsTransparency="True" 
+        Background="Transparent"
+        Topmost="True" 
+        ShowInTaskbar="False"
+        ResizeMode="NoResize"
+        LocationChanged="Window_LocationChanged"
+        SizeChanged="Window_SizeChanged"
+        PreviewMouseWheel="Window_PreviewMouseWheel">
+    
+    <Grid>
+        <!-- The visual border for the user to grab onto -->
+        <Border Name="DraggableBorder" 
+                BorderBrush="DodgerBlue" 
+                BorderThickness="3" 
+                Background="Transparent"
+                CornerRadius="2"
+                MouseLeftButtonDown="Border_MouseLeftButtonDown">
+                
+            <!-- This inner Border perfectly perfectly aligns with the cropped region 
+                 but is completely HitTest invisible so mouse clicks pass through to the real app -->
+            <Border Background="Transparent" IsHitTestVisible="False" Margin="3" />
+        </Border>
+
+        <!-- Thumbs for 8 edges to replace native Window Resize (which is bad for top/left dragging) -->
+        <Thumb Name="ThumbN" VerticalAlignment="Top" HorizontalAlignment="Stretch" Height="6" Margin="6,0,6,0" Cursor="SizeNS" DragStarted="Thumb_DragStarted" DragDelta="Thumb_DragDelta" DragCompleted="Thumb_DragCompleted">
+            <Thumb.Template><ControlTemplate TargetType="Thumb"><Rectangle Fill="Transparent"/></ControlTemplate></Thumb.Template>
+        </Thumb>
+        <Thumb Name="ThumbS" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Height="6" Margin="6,0,6,0" Cursor="SizeNS" DragStarted="Thumb_DragStarted" DragDelta="Thumb_DragDelta" DragCompleted="Thumb_DragCompleted">
+            <Thumb.Template><ControlTemplate TargetType="Thumb"><Rectangle Fill="Transparent"/></ControlTemplate></Thumb.Template>
+        </Thumb>
+        <Thumb Name="ThumbW" VerticalAlignment="Stretch" HorizontalAlignment="Left" Width="6" Margin="0,6,0,6" Cursor="SizeWE" DragStarted="Thumb_DragStarted" DragDelta="Thumb_DragDelta" DragCompleted="Thumb_DragCompleted">
+            <Thumb.Template><ControlTemplate TargetType="Thumb"><Rectangle Fill="Transparent"/></ControlTemplate></Thumb.Template>
+        </Thumb>
+        <Thumb Name="ThumbE" VerticalAlignment="Stretch" HorizontalAlignment="Right" Width="6" Margin="0,6,0,6" Cursor="SizeWE" DragStarted="Thumb_DragStarted" DragDelta="Thumb_DragDelta" DragCompleted="Thumb_DragCompleted">
+            <Thumb.Template><ControlTemplate TargetType="Thumb"><Rectangle Fill="Transparent"/></ControlTemplate></Thumb.Template>
+        </Thumb>
+        <Thumb Name="ThumbNW" VerticalAlignment="Top" HorizontalAlignment="Left" Width="6" Height="6" Cursor="SizeNWSE" DragStarted="Thumb_DragStarted" DragDelta="Thumb_DragDelta" DragCompleted="Thumb_DragCompleted">
+            <Thumb.Template><ControlTemplate TargetType="Thumb"><Rectangle Fill="Transparent"/></ControlTemplate></Thumb.Template>
+        </Thumb>
+        <Thumb Name="ThumbNE" VerticalAlignment="Top" HorizontalAlignment="Right" Width="6" Height="6" Cursor="SizeNESW" DragStarted="Thumb_DragStarted" DragDelta="Thumb_DragDelta" DragCompleted="Thumb_DragCompleted">
+            <Thumb.Template><ControlTemplate TargetType="Thumb"><Rectangle Fill="Transparent"/></ControlTemplate></Thumb.Template>
+        </Thumb>
+        <Thumb Name="ThumbSW" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="6" Height="6" Cursor="SizeNESW" DragStarted="Thumb_DragStarted" DragDelta="Thumb_DragDelta" DragCompleted="Thumb_DragCompleted">
+            <Thumb.Template><ControlTemplate TargetType="Thumb"><Rectangle Fill="Transparent"/></ControlTemplate></Thumb.Template>
+        </Thumb>
+        <Thumb Name="ThumbSE" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="6" Height="6" Cursor="SizeNWSE" DragStarted="Thumb_DragStarted" DragDelta="Thumb_DragDelta" DragCompleted="Thumb_DragCompleted">
+            <Thumb.Template><ControlTemplate TargetType="Thumb"><Rectangle Fill="Transparent"/></ControlTemplate></Thumb.Template>
+        </Thumb>
+        
+        <!-- A small drag handle tab at the top-left for easier dragging without clicking edges -->
+        <Border Name="DragHandle" 
+                Background="DodgerBlue" 
+                CornerRadius="0,0,5,0" 
+                Width="30" Height="20" 
+                VerticalAlignment="Top" 
+                HorizontalAlignment="Left" 
+                Cursor="SizeAll"
+                MouseLeftButtonDown="Border_MouseLeftButtonDown">
+            <TextBlock Text="✥" Foreground="White" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-2,0,0"/>
+        </Border>
+
+        <!-- Phase 3: Route Intent Button at the top right -->
+        <Button Name="RouteIntentButton" 
+                Content="➦ Route" 
+                Height="24" 
+                Padding="10,0"
+                Margin="0,5,5,0"
+                VerticalAlignment="Top" 
+                HorizontalAlignment="Right" 
+                Background="#FFFF5722" 
+                Foreground="White" 
+                BorderThickness="0" 
+                Cursor="Hand"
+                Click="RouteIntentButton_Click"/>
+    </Grid>
+</Window>

@@ -1,0 +1,73 @@
+<Window x:Class="AgentSpace.App.Views.IntentRoutingOverlayWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Intent Routing Override" 
+        WindowState="Maximized" 
+        AllowsTransparency="True" 
+        WindowStyle="None" 
+        Background="#80000000" 
+        Topmost="True" 
+        ShowInTaskbar="False"
+        Loaded="Window_Loaded"
+        PreviewKeyDown="Window_PreviewKeyDown">
+    <Canvas Name="OverlayCanvas">
+        <!-- Target Highlight Border -->
+        <Border Name="TargetHighlightBorder"
+                BorderBrush="#FF00E5FF"
+                BorderThickness="4"
+                CornerRadius="4"
+                Background="#2000E5FF"
+                Visibility="Hidden">
+            <Border.Effect>
+                <DropShadowEffect Color="#FF00E5FF" BlurRadius="20" ShadowDepth="0" />
+            </Border.Effect>
+        </Border>
+        
+        <!-- Label for current target index and title -->
+        <Border Background="#FF00E5FF" 
+                HorizontalAlignment="Left" 
+                VerticalAlignment="Top" 
+                Padding="5,2" 
+                CornerRadius="0,0,4,0">
+            <TextBlock Name="TargetIndexText" Foreground="Black" FontWeight="Bold" Text="Target 1"/>
+        </Border>
+        
+        <!-- Central Master List HUD -->
+        <Border Canvas.Left="0" Canvas.Top="0" Name="HudContainerBorder" Visibility="Hidden">
+            <!-- This will be centered in code-behind relative to Canvas size -->
+            <Border Background="#D8000000" CornerRadius="8" Padding="20" BorderBrush="#FF00E5FF" BorderThickness="2" Width="400" MaxHeight="600">
+                <Border.Effect>
+                    <DropShadowEffect Color="#FF00E5FF" BlurRadius="15" ShadowDepth="0" />
+                </Border.Effect>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Grid.Row="0" Foreground="White" FontSize="20" FontWeight="Bold" Margin="0,0,0,15" Text="Select Routing Target" HorizontalAlignment="Center"/>
+                    
+                    <ListBox Grid.Row="1" Name="TargetsListBox" Background="Transparent" BorderThickness="0" Foreground="White" FontSize="16" SelectionMode="Single" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Padding" Value="10,5"/>
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="IsHitTestVisible" Value="False"/> <!-- Force keyboard-only interaction for now to keep it simple -->
+                                <Style.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" Value="#FF00E5FF"/>
+                                        <Setter Property="Foreground" Value="Black"/>
+                                        <Setter Property="FontWeight" Value="Bold"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
+                    
+                    <TextBlock Grid.Row="2" Foreground="#FFAAAAAA" FontSize="13" Margin="0,15,0,0" HorizontalAlignment="Center" Text="[Tab] Next • [Shift+Tab] Prev • [Space] Route • [Esc] Cancel"/>
+                </Grid>
+            </Border>
+        </Border>
+    </Canvas>
+</Window>

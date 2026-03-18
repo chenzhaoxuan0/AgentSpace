@@ -1,5 +1,6 @@
 # AgentSpace Desktop
 
+中文请查看[简体中文](README_zh_CN.md)
 AgentSpace is a Windows desktop application that crops (masks) running applications and enables automated clipboard data transfer between them. It uses Win32 APIs and WPF to manipulate native windows.
 
 ## Features

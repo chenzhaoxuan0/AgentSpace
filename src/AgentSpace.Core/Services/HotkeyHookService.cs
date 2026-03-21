@@ -10,6 +10,8 @@ namespace AgentSpace.Core.Services
         private readonly IntPtr _hwnd;
         private const int SELECTION_HOTKEY_ID = 9000;
         private const int ROUTE_HOTKEY_ID = 9001;
+        private const int ARRANGE_HOTKEY_ID = 9002;
+        private const uint VK_A = 0x41;
 
         // Modifiers: MOD_CONTROL = 0x0002, MOD_SHIFT = 0x0004
         private const uint MOD_CONTROL = 0x0002;
@@ -18,6 +20,7 @@ namespace AgentSpace.Core.Services
 
         public event EventHandler SelectionHotkeyPressed;
         public event EventHandler RouteHotkeyPressed;
+        public event EventHandler ArrangeHotkeyPressed;
 
         public HotkeyHookService(IntPtr windowHandle)
         {
@@ -37,6 +40,12 @@ namespace AgentSpace.Core.Services
             {
                 Console.WriteLine("Failed to register Route hotkey");
             }
+
+            bool arrangeSuccess = User32.RegisterHotKey(_hwnd, ARRANGE_HOTKEY_ID, MOD_CONTROL | MOD_SHIFT, VK_A);
+            if (!arrangeSuccess)
+            {
+                Console.WriteLine("Failed to register Arrange hotkey Ctrl+Shift+A");
+            }
         }
 
         public void ReRegisterRouteHotkey()
@@ -53,6 +62,7 @@ namespace AgentSpace.Core.Services
         {
             User32.UnregisterHotKey(_hwnd, SELECTION_HOTKEY_ID);
             User32.UnregisterHotKey(_hwnd, ROUTE_HOTKEY_ID);
+            User32.UnregisterHotKey(_hwnd, ARRANGE_HOTKEY_ID);
         }
 
         public void ProcessMessage(int msg, IntPtr wParam)
@@ -68,6 +78,10 @@ namespace AgentSpace.Core.Services
                 else if (id == ROUTE_HOTKEY_ID)
                 {
                     RouteHotkeyPressed?.Invoke(this, EventArgs.Empty);
+                }
+                else if (id == ARRANGE_HOTKEY_ID)
+                {
+                    ArrangeHotkeyPressed?.Invoke(this, EventArgs.Empty);
                 }
             }
         }

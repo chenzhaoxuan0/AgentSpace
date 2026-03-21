@@ -8,20 +8,36 @@
             <TextBlock Text="Status: Active" Foreground="Green" FontWeight="SemiBold" Margin="0,0,0,15" />
             <TextBlock Text="1. Press Ctrl+Shift+Space to select a region." TextWrapping="Wrap" />
             <TextBlock Text="2. The underlying window will be cropped to this region." TextWrapping="Wrap" Margin="0,5,0,0" />
-            <TextBlock Text="3. Make sure this Controller window has focus and press ESC to restore the cropped window." TextWrapping="Wrap" Margin="0,5,0,0" />
+            <TextBlock Text="3. Press Ctrl+Shift+A or click 'Arrange Windows' to auto-grid all cropped windows." TextWrapping="Wrap" Margin="0,5,0,0" />
+            <TextBlock Text="4. Make sure this Controller window has focus and press ESC to restore all windows." TextWrapping="Wrap" Margin="0,5,0,0" />
             
             <CheckBox Name="UnmaskOnResizeCheckBox" Content="Unmask native window while resizing container" Margin="0,15,0,0" IsChecked="True" Checked="UnmaskOnResize_Checked" Unchecked="UnmaskOnResize_Unchecked" />
             
             <TextBlock Text="Route Intent Hotkey (Click inside and press):" Margin="0,15,0,5" FontWeight="SemiBold"/>
-            <TextBox Name="RouteHotkeyTextBox" 
-                     Text="Ctrl + Shift + V" 
-                     IsReadOnly="True" 
-                     PreviewKeyDown="RouteHotkeyTextBox_PreviewKeyDown" 
-                     Height="24" 
+            <TextBox Name="RouteHotkeyTextBox"
+                     Text="Ctrl + Shift + V"
+                     IsReadOnly="True"
+                     PreviewKeyDown="RouteHotkeyTextBox_PreviewKeyDown"
+                     Height="24"
                      VerticalContentAlignment="Center"
                      Padding="5,0"
                      ToolTip="Click here and press your desired shortcut (e.g., Ctrl+Alt+S)"/>
-            
+
+            <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
+                <TextBlock Text="Arrange Gap (px):" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <TextBox Name="ArrangeGapTextBox"
+                         Text="0"
+                         Width="60"
+                         Height="24"
+                         VerticalContentAlignment="Center"
+                         Padding="5,0"
+                         ToolTip="Pixel spacing between arranged windows (0 = seamless)"
+                         PreviewKeyDown="ArrangeGapTextBox_PreviewKeyDown"
+                         LostFocus="ArrangeGapTextBox_LostFocus"/>
+            </StackPanel>
+
+            <Button Content="Arrange Windows (Ctrl+Shift+A)" Width="220" Height="30" Margin="0,10,0,0" Click="ArrangeAll_Click" HorizontalAlignment="Left" Background="#FF2196F3" Foreground="White" BorderThickness="0" Cursor="Hand" />
+
             <Button Content="Restore All Windows (ESC)" Width="200" Height="30" Margin="0,20,0,0" Click="RestoreAll_Click" HorizontalAlignment="Left" Background="#FF4CAF50" Foreground="White" BorderThickness="0" Cursor="Hand" />
         </StackPanel>
     </Grid>

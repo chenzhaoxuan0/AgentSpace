@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Interop;
 using AgentSpace.Core.Services;
@@ -31,6 +32,7 @@ namespace AgentSpace.App
             _hotkeyService = new HotkeyHookService(hwnd);
             _hotkeyService.SelectionHotkeyPressed += OnHotkeyPressed;
             _hotkeyService.RouteHotkeyPressed += OnRouteHotkeyPressed;
+            _hotkeyService.ArrangeHotkeyPressed += OnArrangeHotkeyPressed;
             _hotkeyService.Register();
 
             HwndSource source = HwndSource.FromHwnd(hwnd);
@@ -68,6 +70,73 @@ namespace AgentSpace.App
             {
                 sourceContainer.TriggerRouteIntent();
             }
+        }
+
+        private void OnArrangeHotkeyPressed(object sender, EventArgs e)
+        {
+            ArrangeAllWindows();
+        }
+
+        private void ArrangeAll_Click(object sender, RoutedEventArgs e)
+        {
+            ArrangeAllWindows();
+        }
+
+        private void ArrangeAllWindows()
+        {
+            // Collect all container windows
+            var containers = new List<(IntPtr Hwnd, double DipLeft, double DipTop, double DipWidth, double DipHeight)>();
+            foreach (Window window in Application.Current.Windows)
+            {
+                if (window is ContainerWindow cw)
+                {
+                    containers.Add((cw.TargetHwnd, cw.Left, cw.Top, cw.Width, cw.Height));
+                }
+            }
+
+            if (containers.Count == 0)
+                return;
+
+            // Get screen dimensions in physical pixels
+            int screenW = (int)(SystemParameters.PrimaryScreenWidth * GetDpiScaleX());
+            int screenH = (int)(SystemParameters.PrimaryScreenHeight * GetDpiScaleY());
+            int gap = AppSettings.ArrangeGap;
+            double dpiScaleX = GetDpiScaleX();
+            double dpiScaleY = GetDpiScaleY();
+
+            ArrangeService.ArrangeAll(
+                containers,
+                screenW,
+                screenH,
+                gap,
+                dpiScaleX,
+                dpiScaleY,
+                (hwnd, dipX, dipY, dipW, dipH) =>
+                {
+                    foreach (Window window in Application.Current.Windows)
+                    {
+                        if (window is ContainerWindow cw && cw.TargetHwnd == hwnd)
+                        {
+                            cw.Left = dipX;
+                            cw.Top = dipY;
+                            cw.Width = dipW;
+                            cw.Height = dipH;
+                            break;
+                        }
+                    }
+                });
+        }
+
+        private double GetDpiScaleX()
+        {
+            PresentationSource source = PresentationSource.FromVisual(this);
+            return source != null ? source.CompositionTarget.TransformToDevice.M11 : 1.0;
+        }
+
+        private double GetDpiScaleY()
+        {
+            PresentationSource source = PresentationSource.FromVisual(this);
+            return source != null ? source.CompositionTarget.TransformToDevice.M22 : 1.0;
         }
 
         private async void OnSelectionCompleted(NativeRect selectionRect)
@@ -197,10 +266,40 @@ namespace AgentSpace.App
 
             // Re-apply binding
             _hotkeyService?.ReRegisterRouteHotkey();
-            
-            // Remove focus 
+
+            // Remove focus
             System.Windows.Input.Keyboard.ClearFocus();
             this.Focus();
+        }
+
+        private void ArrangeGapTextBox_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            // Only allow digits and backspace
+            if (!char.IsDigit((char)e.Key) &&
+                e.Key != System.Windows.Input.Key.Back &&
+                e.Key != System.Windows.Input.Key.Delete &&
+                e.Key != System.Windows.Input.Key.Left &&
+                e.Key != System.Windows.Input.Key.Right &&
+                e.Key != System.Windows.Input.Key.Home &&
+                e.Key != System.Windows.Input.Key.End &&
+                e.Key != System.Windows.Input.Key.Tab)
+            {
+                e.Handled = true;
+                return;
+            }
+        }
+
+        private void ArrangeGapTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (int.TryParse(ArrangeGapTextBox.Text, out int gap))
+            {
+                AppSettings.ArrangeGap = Math.Max(0, Math.Min(gap, 200)); // clamp to 0-200
+                ArrangeGapTextBox.Text = AppSettings.ArrangeGap.ToString();
+            }
+            else
+            {
+                ArrangeGapTextBox.Text = AppSettings.ArrangeGap.ToString();
+            }
         }
 
         protected override void OnClosed(EventArgs e)

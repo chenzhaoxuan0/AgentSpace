@@ -14,5 +14,13 @@ src/**/obj/
 *.pdb
 *.runtimeconfig.dev.json
 
+# Build artifacts in repo root (should be built, not committed)
+*.dll
+*.exe
+*.pdb
+*.deps.json
+*.runtimeconfig.json
+*.runtimeconfig.dev.json
+
 # Temp build folders
 release_temp/
